@@ -18,7 +18,7 @@ SIZE_OF_CANVAS_IN_PIXELS_Y = 500
 
 
 #Carga del archivo
-file_name = "C:/Users/alamb/OneDrive/Escritorio/map.txt"
+file_name = "resources/text_files/map.txt"
 content = loadFile(file_name)
 
 
@@ -33,22 +33,22 @@ simulation_params = {
 def agent_portrayal(agent):
     portrayal = {"Shape": "circle", "Filled": "true", "r": 0.5}
     if isinstance(agent, StoneAgent):
-        portrayal["Shape"] = "icons/muro.png"
+        portrayal["Shape"] = "resources/icons/muro.png"
         portrayal["Layer"] = 0
         portrayal["w"] = 1
         portrayal["h"] = 1
     elif isinstance(agent, PathAgent):
-        portrayal["Shape"] = "icons/pavimentacion.png"
+        portrayal["Shape"] = "resources/icons/pavimentacion.png"
         portrayal["Layer"] = 0
         portrayal["w"] = 1
         portrayal["h"] = 1
     elif isinstance(agent, RobotAgent):
-        portrayal["Shape"] = "icons/robot.png"
+        portrayal["Shape"] = "resources/icons/robot.png"
         portrayal["Layer"] = 1
         portrayal["w"] = 1
         portrayal["h"] = 1
     elif isinstance(agent, BoxAgent):
-        portrayal["Shape"] = "icons/paquete.png"
+        portrayal["Shape"] = "resources/icons/paquete.png"
         portrayal["Layer"] = 2
         portrayal["w"] = 0.5
         portrayal["h"] = 0.5
