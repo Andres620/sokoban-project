@@ -10,11 +10,12 @@ def loadFile(file_name):
 def parseText(text):
     lines = text.strip().split('\n')
     agent_dict = {'R': [], 'C': [], 'M': [], 'A': [], 'B': []}
-
+    num_rows = len(lines)
+    num_cols = 0
     for row, line in enumerate(lines):
         cells = line.rstrip(', ').split(', ')
+        num_cols = max(num_cols, len(cells))
         for col, cell in enumerate(cells):
-            print(cell)
             if cell == "R":
                 agent_dict['R'].append((row, col))
             elif cell == "M":
@@ -29,15 +30,5 @@ def parseText(text):
                 elif agent_type == "b":
                     agent_dict['B'].append((row, col))
 
-    return agent_dict
+    return agent_dict, num_rows, num_cols
 
-
-file_name = "C:/Users/alamb/OneDrive/Escritorio/map.txt"  # Replace with the path to your file
-content = loadFile(file_name)
-
-
-if content is not None:
-    agents = parseText(content)
-    print(agents)
-else:
-    print("File not found.")
