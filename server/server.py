@@ -11,8 +11,8 @@ from models.labyrinthModel import LabyrinthModel
 from agents.searchExplorerAgent import SearchExplorerAgent
 from utils.fileUtils import *
 
-NUM_ROWS = 7
-NUM_COLS = 5
+NUM_ROWS = 0
+NUM_COLS = 0
 SIZE_OF_CANVAS_IN_PIXELS_X = 500
 SIZE_OF_CANVAS_IN_PIXELS_Y = 500
 
@@ -20,11 +20,12 @@ SIZE_OF_CANVAS_IN_PIXELS_Y = 500
 #Carga del archivo
 file_name = "resources/text_files/map.txt"
 content = loadFile(file_name)
+map, NUM_ROWS, NUM_COLS = parseText(content)
 
 
 simulation_params = {
     "number_of_agents": mesa.visualization.Slider(name='Number of Agents', value=2, min_value=1, max_value=200, step=1, description="seleccionar numero de agentes"),
-    "map": parseText(content),
+    "map": map,
     "width": NUM_COLS,
     "height": NUM_ROWS
 }
