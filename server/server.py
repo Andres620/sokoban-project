@@ -54,7 +54,7 @@ def agent_portrayal(agent):
         portrayal["w"] = 0.5
         portrayal["h"] = 0.5
     else:
-        portrayal["Shape"] = "icons/bandera.png"
+        portrayal["Shape"] = "resources/icons/bandera.png"
         portrayal["Layer"] = 3
         portrayal["w"] = 1
         portrayal["h"] = 1

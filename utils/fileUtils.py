@@ -16,7 +16,6 @@ def parseText(text):
         cells = line.rstrip(', ').split(', ')
         num_cols = max(num_cols, len(cells))
         for col, cell in enumerate(cells):
-            print(cell)
             if cell == "R":
                 agent_dict['R'].append((row, col))
             elif cell == "M":
