@@ -6,7 +6,8 @@ from agents.boxAgent import BoxAgent
 from agents.goalAgent import GoalAgent
 from agents.pathAgent import PathAgent
 from agents.robotAgent import RobotAgent
-from agents.stoneAgent import StoneAgent
+from agents.wallAgent import WallAgent
+from game.gameRules import GameRules
 from models.labyrinthModel import LabyrinthModel
 from agents.searchExplorerAgent import SearchExplorerAgent
 from utils.fileUtils import *
@@ -33,7 +34,7 @@ simulation_params = {
 
 def agent_portrayal(agent):
     portrayal = {"Shape": "circle", "Filled": "true", "r": 0.5}
-    if isinstance(agent, StoneAgent):
+    if isinstance(agent, WallAgent):
         portrayal["Shape"] = "resources/icons/muro.png"
         portrayal["Layer"] = 0
         portrayal["w"] = 1
