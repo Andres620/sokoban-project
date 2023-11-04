@@ -18,6 +18,8 @@ class LabyrinthModel(Model):
         self.map = map
         self.grid = MultiGrid(width, height, torus=False)
         self.schedule = RandomActivation(self)
+        self.algorithms_finished = False
+        self.running = True
 
         for agent_type, coordinates in map.items():
             for coordinate in coordinates:
@@ -38,6 +40,13 @@ class LabyrinthModel(Model):
                 self.grid.place_agent(newAgent, (x, y))
                 unique_id += 1
 
-
     def step(self) -> None:
         self.schedule.step()
+        if not self.algorithms_finished:
+            # Verifica si todos los agentes han terminado sus algoritmos
+            all_robot_agents_finished = all(
+                agent.is_algorithm_finished() for agent in self.schedule.agents if isinstance(agent, RobotAgent))
+
+            if all_robot_agents_finished:
+                self.algorithms_finished = True
+                self.running = False  # Detiene la simulación

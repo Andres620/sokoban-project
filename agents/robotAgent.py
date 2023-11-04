@@ -8,7 +8,7 @@ class RobotAgent(Agent):
     def __init__(self,unique_id, model):
         super().__init__(unique_id, model)
         self.priority_order = [(-1, 0), (0, 1), (1, 0), (0, -1)]
-        self.algorithm = BFS(self.model.grid, priority_order=[(-1, 0), (0, -1), (1, 0), (0, 1)]) # Izquierda, Arriba, Derecha, Abajo
+        self.algorithm = BFS(self.model.grid, priority_order= self.priority_order) # Izquierda, Arriba, Derecha, Abajo
         self.i = True
         self.path = []
 
@@ -49,6 +49,9 @@ class RobotAgent(Agent):
                     return False  # No es un movimiento válido si hay una pared.
             return True  # Es un movimiento válido si la casilla de destino está vacía.
         return False  # No es un movimiento válido
+
+    def is_algorithm_finished(self):
+        return not bool(self.path)
 
     def prioritize_steps(self, valid_steps):
         return sorted(valid_steps,

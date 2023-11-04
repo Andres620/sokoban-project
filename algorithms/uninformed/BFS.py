@@ -16,6 +16,7 @@ class BFS(BaseAlgorithm):
         came_from = {}
 
         while queue:
+            print('queue: ', queue)
             current = queue.pop(0)
             if current == goal:
                 break
@@ -23,7 +24,6 @@ class BFS(BaseAlgorithm):
             for dx, dy in self.priority_order:
                 x, y = current
                 neighbor = (x + dx, y + dy)
-
                 if self.is_valid_move(neighbor) and neighbor not in came_from:
                     queue.append(neighbor)
                     came_from[neighbor] = current

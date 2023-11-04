@@ -7,7 +7,6 @@ from agents.goalAgent import GoalAgent
 from agents.pathAgent import PathAgent
 from agents.robotAgent import RobotAgent
 from agents.wallAgent import WallAgent
-from game.gameRules import GameRules
 from models.labyrinthModel import LabyrinthModel
 from agents.searchExplorerAgent import SearchExplorerAgent
 from utils.fileUtils import *
