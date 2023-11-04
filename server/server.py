@@ -7,6 +7,7 @@ from agents.goalAgent import GoalAgent
 from agents.pathAgent import PathAgent
 from agents.robotAgent import RobotAgent
 from agents.wallAgent import WallAgent
+from algorithms.algorithmFactory import AlgorithmFactory
 from models.labyrinthModel import LabyrinthModel
 from agents.searchExplorerAgent import SearchExplorerAgent
 from utils.fileUtils import *
@@ -22,9 +23,9 @@ file_name = "resources/text_files/map.txt"
 content = loadFile(file_name)
 map, NUM_ROWS, NUM_COLS = parseText(content)
 
-
 simulation_params = {
     "number_of_agents": mesa.visualization.Slider(name='Number of Agents', value=2, min_value=1, max_value=200, step=1, description="seleccionar numero de agentes"),
+    "algorithm_choice": mesa.visualization.Choice(name='Choice Algorithm', value='BFS', choices=['BFS', 'DFS']),
     "map": map,
     "width": NUM_COLS,
     "height": NUM_ROWS

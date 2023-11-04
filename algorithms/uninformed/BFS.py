@@ -4,7 +4,7 @@ from algorithms.baseAlgorithm import BaseAlgorithm
 
 
 class BFS(BaseAlgorithm):
-    def __init__(self, grid, priority_order):
+    def __init__(self, grid, priority_order=[(-1, 0), (0, 1), (1, 0), (0, -1)]): # Izquierda, Arriba, Derecha, Abajo
         self.grid = grid
         self.priority_order = priority_order
 
@@ -47,3 +47,6 @@ class BFS(BaseAlgorithm):
             if isinstance(content, WallAgent) or isinstance(content, BoxAgent):
                 return False
         return True
+
+    def update_grid(self, grid):
+        self.grid = grid

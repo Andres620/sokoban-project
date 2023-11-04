@@ -9,14 +9,17 @@ from agents.pathAgent import PathAgent
 from agents.robotAgent import RobotAgent
 from agents.searchExplorerAgent import SearchExplorerAgent
 from agents.wallAgent import WallAgent
+from algorithms.algorithmFactory import AlgorithmFactory
 
 
 class LabyrinthModel(Model):
-    def __init__(self, number_of_agents, map, width, height):
+    def __init__(self, number_of_agents, algorithm_choice, map, width, height):
+        print(algorithm_choice)
         unique_id = 0
         self.num_agents = number_of_agents
         self.map = map
         self.grid = MultiGrid(width, height, torus=False)
+        self.algorithm = AlgorithmFactory.create_algorithm(algorithm_choice, grid=self.grid, heuristic_function=None)
         self.schedule = RandomActivation(self)
         self.algorithms_finished = False
         self.running = True
@@ -30,7 +33,7 @@ class LabyrinthModel(Model):
                 elif agent_type == 'C':
                     newAgent = PathAgent(unique_id, self)
                 elif agent_type == 'A':
-                    newAgent = RobotAgent(unique_id, self)
+                    newAgent = RobotAgent(unique_id, self, self.algorithm)
                 elif agent_type == 'B':
                     newAgent = BoxAgent(unique_id, self)
                 elif agent_type == 'M':
