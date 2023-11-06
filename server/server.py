@@ -6,7 +6,8 @@ from agents.boxAgent import BoxAgent
 from agents.goalAgent import GoalAgent
 from agents.pathAgent import PathAgent
 from agents.robotAgent import RobotAgent
-from agents.stoneAgent import StoneAgent
+from agents.wallAgent import WallAgent
+from algorithms.algorithmFactory import AlgorithmFactory
 from models.labyrinthModel import LabyrinthModel
 from agents.searchExplorerAgent import SearchExplorerAgent
 from utils.fileUtils import *
@@ -22,9 +23,9 @@ file_name = "resources/text_files/map.txt"
 content = loadFile(file_name)
 map, NUM_ROWS, NUM_COLS = parseText(content)
 
-
 simulation_params = {
     "number_of_agents": mesa.visualization.Slider(name='Number of Agents', value=2, min_value=1, max_value=200, step=1, description="seleccionar numero de agentes"),
+    "algorithm_choice": mesa.visualization.Choice(name='Choice Algorithm', value='BFS', choices=['BFS', 'DFS']),
     "map": map,
     "width": NUM_COLS,
     "height": NUM_ROWS
@@ -33,7 +34,7 @@ simulation_params = {
 
 def agent_portrayal(agent):
     portrayal = {"Shape": "circle", "Filled": "true", "r": 0.5}
-    if isinstance(agent, StoneAgent):
+    if isinstance(agent, WallAgent):
         portrayal["Shape"] = "resources/icons/muro.png"
         portrayal["Layer"] = 0
         portrayal["w"] = 1

@@ -1,12 +1,40 @@
 from mesa import Agent
 
+from agents.wallAgent import WallAgent
+from algorithms.uninformed.BFS import BFS
+
 
 class RobotAgent(Agent):
-    def __init__(self,unique_id, model):
+    def __init__(self,unique_id, model, algorithm):
         super().__init__(unique_id, model)
+        self.algorithm = algorithm
+        self.path = None
 
     def step(self) -> None:
-        pass
+        if self.path is None:  # Solo ejecutar el algoritmo si no hay un camino calculado.
+            self.calculate_path()
+        self.move()
 
     def move(self) -> None:
-        pass
+        if self.path:
+            new_position = self.path.pop(0)
+            self.model.grid.move_agent(self, new_position)
+        else:
+            print("Ruta terminada")
+
+    def is_valid_move(self, target_position):
+        if not self.model.grid.out_of_bounds(target_position):
+            cell_contents = self.model.grid.get_cell_list_contents(target_position)
+            # Verifica si la casilla de destino está vacía o no contiene una pared.
+            for content in cell_contents:
+                if isinstance(content, WallAgent):
+                    return False  # No es un movimiento válido si hay una pared.
+            return True  # Es un movimiento válido si la casilla de destino está vacía.
+        return False  # No es un movimiento válido
+
+    def calculate_path(self):
+        self.path = self.algorithm.search(self.pos, (13, 1)) #Cambiar para que se ejecute desde la posicion inicial deel robot
+        print("Ruta del algoritmo:", self.path)
+
+    def is_algorithm_finished(self):
+        return not bool(self.path)
