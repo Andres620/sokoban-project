@@ -7,9 +7,7 @@ from agents.goalAgent import GoalAgent
 from agents.pathAgent import PathAgent
 from agents.robotAgent import RobotAgent
 from agents.wallAgent import WallAgent
-from algorithms.algorithmFactory import AlgorithmFactory
 from models.labyrinthModel import LabyrinthModel
-from agents.searchExplorerAgent import SearchExplorerAgent
 from utils.fileUtils import *
 
 NUM_ROWS = 0
@@ -40,7 +38,8 @@ def agent_portrayal(agent):
         portrayal["w"] = 1
         portrayal["h"] = 1
     elif isinstance(agent, PathAgent):
-        portrayal["Shape"] = "resources/icons/pavimentacion.png"
+        portrayal["Shape"] = "circle"#"resources/icons/pavimentacion.png"
+        portrayal["Color"] = "blue"
         portrayal["Layer"] = 0
         portrayal["w"] = 1
         portrayal["h"] = 1
@@ -54,11 +53,17 @@ def agent_portrayal(agent):
         portrayal["Layer"] = 2
         portrayal["w"] = 0.5
         portrayal["h"] = 0.5
-    else:
+    elif isinstance(agent, GoalAgent):
         portrayal["Shape"] = "resources/icons/bandera.png"
         portrayal["Layer"] = 3
         portrayal["w"] = 1
         portrayal["h"] = 1
+    else:
+        portrayal["Shape"] = "circle"
+        portrayal["Color"] = agent.color
+        portrayal["Layer"] = 4
+        portrayal["text"] = agent.order_number
+        portrayal["text_color"] = "black"
     return portrayal
 
 
