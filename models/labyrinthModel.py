@@ -36,7 +36,7 @@ class LabyrinthModel(Model):
                 elif agent_type == 'A':
                     newAgent = RobotAgent(self.unique_id, self, self.algorithm)
                 elif agent_type == 'B':
-                    newAgent = BoxAgent(self.unique_id, self)
+                    newAgent = BoxAgent(self.unique_id, self, self.algorithm)
                 elif agent_type == 'M':
                     newAgent = GoalAgent(self.unique_id, self)
                     self.goal_position = (x, y)
