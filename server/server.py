@@ -3,6 +3,7 @@ from mesa.visualization.modules import CanvasGrid
 from mesa.visualization.ModularVisualization import ModularServer
 
 from agents.boxAgent import BoxAgent
+from agents.expansionAgent import ExpansionAgent
 from agents.goalAgent import GoalAgent
 from agents.pathAgent import PathAgent
 from agents.robotAgent import RobotAgent
@@ -59,12 +60,16 @@ def agent_portrayal(agent):
         portrayal["Layer"] = 3
         portrayal["w"] = 1
         portrayal["h"] = 1
-    else:
+    elif isinstance(agent, ExpansionAgent):
         portrayal["Shape"] = "circle"
         portrayal["Color"] = agent.color
         portrayal["Layer"] = 4
         portrayal["text"] = agent.order_number
         portrayal["text_color"] = "black"
+    else:
+        portrayal["Shape"] = "circle"
+        portrayal["Color"] = 'green'
+        portrayal["Layer"] = 5
     return portrayal
 
 
