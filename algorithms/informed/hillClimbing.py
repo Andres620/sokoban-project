@@ -48,7 +48,7 @@ class HillClimbing(BaseAlgorithm):
             path.append(current)
             current = came_from.get(current, None)
             if current is None:
-                break  # No hay camino encontrado
+                return [], expansion_nodes
 
         path.append(start)
         path.reverse()
