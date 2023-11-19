@@ -70,6 +70,5 @@ class LabyrinthModel(Model):
             if isinstance(agent, ExpansionAgent) and agent.pos in path:
                 agent.color = "green"
 
-
     def get_goal_position(self):
         return self.goal_position
