@@ -1,5 +1,7 @@
 from mesa import Agent
 
+from agents.wallAgent import WallAgent
+
 
 class BoxAgent(Agent):
     def __init__(self,unique_id, model, algorithm):
@@ -9,18 +11,20 @@ class BoxAgent(Agent):
         self.expansion_nodes = None
 
     def step(self) -> None:
-        if self.path is None:  # Solo ejecutar el algoritmo si no hay un camino calculado.
-            self.calculate_path()
-        if self.expansion_nodes:  # Si hay nodos de expansion, los crea
-            self.model.create_expansion_agents([self.expansion_nodes.pop(0)])
-        self.move()
+        pass
+        # if self.path is None:  # Solo ejecutar el algoritmo si no hay un camino calculado.
+        #     self.calculate_path()
+        # if self.expansion_nodes:  # Si hay nodos de expansion, los crea
+        #     self.model.create_expansion_agents([self.expansion_nodes.pop(0)])
+        # self.move()
 
     def move(self) -> None:
-        if self.path:
-            new_position = self.path.pop(0)
-            self.model.grid.move_agent(self, new_position)
-        else:
-            print("Ruta terminada")
+        pass
+        # if self.path:
+        #     new_position = self.path.pop(0)
+        #     self.model.grid.move_agent(self, new_position)
+        # else:
+        #     print("Ruta terminada")
 
     def is_valid_move(self, target_position):
         if not self.model.grid.out_of_bounds(target_position):

@@ -48,6 +48,7 @@ class BFS(BaseAlgorithm):
         for content in cell_contents:
             if isinstance(content, WallAgent) or isinstance(content, BoxAgent):
                 return False
+
         return True
 
     def update_grid(self, grid):
