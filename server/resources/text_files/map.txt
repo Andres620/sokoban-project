@@ -1,5 +1,5 @@
 R, R, R, R, R, R, R, R, R, R, R, R, R, R, R,
-R, C-a, C, C, C, C, C, C, C, C, C, C, C, C, R,
+R, C-a, C, C-b, C, C, C, C, C, C, C, C, C, C, R,
 R, C, R, R, C, R, C, R, C, R, R, C, R, C, R,
 R, C, C, C, C-b, C, C, R, C, C, C, C, C, C, R,
 R, R, R, R, C, R, C, R, C, R, R, C, R, C, R,

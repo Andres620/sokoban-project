@@ -11,6 +11,7 @@ class RobotAgent(Agent):
         self.path = None
         self.expansion_nodes = None
         self.order_counter = 1
+        self.robot_move_finished = False
 
     def step(self) -> None:
         if self.path is None:  # Solo ejecutar el algoritmo si no hay un camino calculado.
@@ -21,10 +22,24 @@ class RobotAgent(Agent):
 
             if not bool(self.expansion_nodes):
                 self.model.change_color_path(self.path)
-        self.move()
+
+        if self.is_algorithm_finished():
+            self.move()
 
     def move(self) -> None:
-        pass
+        if self.path:
+            if not hasattr(self, 'path_copy'): # Verifica si la copia ya se ha hecho
+                self.path_copy = self.path.copy()
+
+            new_position = self.path_copy.pop(0)
+            self.model.grid.move_agent(self, new_position)
+
+            if not self.path_copy:
+                self.robot_move_finished = True
+                print("Ruta terminada")
+                del self.path_copy
+        else:
+            self.robot_move_finished = True
 
     def calculate_path(self):
         self.path, self.expansion_nodes = self.algorithm.search(self.pos, self.model.get_goal_position()) #Cambiar para que se ejecute desde la posicion inicial deel robot
@@ -32,5 +47,18 @@ class RobotAgent(Agent):
         print("Ruta del algoritmo:", self.path)
         print("Nodos de expansion:", self.expansion_nodes)
 
+    def is_valid_move(self, target_position):
+        if not self.model.grid.out_of_bounds(target_position):
+            cell_contents = self.model.grid.get_cell_list_contents(target_position)
+            # Verifica si la casilla de destino está vacía o no contiene una pared.
+            for content in cell_contents:
+                if isinstance(content, WallAgent):
+                    return False  # No es un movimiento válido si hay una pared.
+            return True  # Es un movimiento válido si la casilla de destino está vacía.
+        return False  # No es un movimiento válido
+
     def is_algorithm_finished(self):
         return not bool(self.expansion_nodes)
+
+    def is_robot_move_finished(self):
+        return self.robot_move_finished

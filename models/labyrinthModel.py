@@ -51,7 +51,7 @@ class LabyrinthModel(Model):
         if not self.algorithms_finished:
             # Verifica si todos los agentes han terminado sus algoritmos
             all_robot_agents_finished = all(
-                agent.is_algorithm_finished() for agent in self.schedule.agents if isinstance(agent, RobotAgent))
+                agent.is_algorithm_finished() and agent.is_robot_move_finished() for agent in self.schedule.agents if isinstance(agent, RobotAgent))
 
             if all_robot_agents_finished:
                 self.algorithms_finished = True

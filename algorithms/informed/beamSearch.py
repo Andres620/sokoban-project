@@ -21,9 +21,9 @@ class BeamSearch(BaseAlgorithm):
         came_from = {}
         visited = set()
         expansion_nodes = []
-        goal_reached = True
+        exit_while = False
 
-        while goal_reached:
+        while frontier and not exit_while:
             print('Cola de prioridad:', frontier)
             level_nodes = heapq.nsmallest(self.beam_width, frontier)
 
@@ -37,7 +37,7 @@ class BeamSearch(BaseAlgorithm):
                     expansion_nodes.append(current)
 
                 if current == goal:
-                    goal_reached = False
+                    exit_while = True
                     break
 
                 for dx, dy in self.priority_order:
@@ -59,7 +59,7 @@ class BeamSearch(BaseAlgorithm):
             path.append(current)
             current = came_from.get(current, None)
             if current is None:
-                break  # No hay camino encontrado
+                return [], expansion_nodes
 
         path.append(start)
         path.reverse()

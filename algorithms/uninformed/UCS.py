@@ -41,7 +41,9 @@ class UCS(BaseAlgorithm):
         current = goal
         while current != start:
             path.append(current)
-            current = came_from[current]
+            current = came_from.get(current, None)
+            if current is None:
+                return [], expansion_nodes
         path.append(start)
         path.reverse()
 
