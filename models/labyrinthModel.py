@@ -13,13 +13,14 @@ from algorithms.algorithmFactory import AlgorithmFactory
 
 
 class LabyrinthModel(Model):
-    def __init__(self, number_of_agents, algorithm_choice, map, width, height):
+    def __init__(self, number_of_agents, algorithm_choice, heuristic_choice, map, width, height):
         print(algorithm_choice)
+        print(heuristic_choice)
         self.unique_id = 0
         self.num_agents = number_of_agents
         self.map = map
         self.grid = MultiGrid(width, height, torus=False)
-        self.algorithm = AlgorithmFactory.create_algorithm(algorithm_choice, grid=self.grid, heuristic_function=None)
+        self.algorithm = AlgorithmFactory.create_algorithm(algorithm_choice, grid=self.grid, heuristic_function=heuristic_choice)
         self.schedule = RandomActivation(self)
         self.algorithms_finished = False
         self.goal_position = None
