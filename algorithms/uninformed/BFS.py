@@ -53,5 +53,10 @@ class BFS(BaseAlgorithm):
 
         return True
 
+    def get_orthogonal_neighbors(self, position):
+        x, y = position
+        neighbors = [(x + dx, y + dy) for dx, dy in self.priority_order]
+        return [neighbor for neighbor in neighbors if self.is_valid_move(neighbor)]
+
     def update_grid(self, grid):
         self.grid = grid
