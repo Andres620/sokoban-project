@@ -13,8 +13,8 @@ class HeuristicFactory:
 
     @staticmethod
     def euclidean_heuristic(a: tuple[int, int], b: tuple[int, int]) -> float:
-        return math.sqrt((b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2)
+        return math.sqrt((b[0]*10 - a[0]*10) ** 2 + (b[1]*10 - a[1]*10) ** 2)
 
     @staticmethod
     def manhattan_heuristic(a: tuple[int, int], b: tuple[int, int]) -> float:
-        return abs(b[0] - a[0]) + abs(b[1] - a[1])
+        return abs(b[0]*10 - a[0]*10) + abs(b[1]*10 - a[1]*10)

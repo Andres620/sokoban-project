@@ -9,6 +9,8 @@ class BoxAgent(Agent):
         self.algorithm = algorithm
         self.path = None
         self.expansion_nodes = None
+        self.assigned_robot = None  # Atributo para almacenar el robot asignado
+        self.assigned_goal = None    # Atributo para almacenar la meta
 
     def step(self) -> None:
         pass

@@ -25,6 +25,7 @@ class LabyrinthModel(Model):
         self.algorithms_finished = False
         self.goal_position = None
         self.running = True
+        agents_to_assign = []  # Lista para almacenar las cajas que necesitan asignación
 
         for agent_type, coordinates in map.items():
             for coordinate in coordinates:
@@ -38,6 +39,7 @@ class LabyrinthModel(Model):
                     newAgent = RobotAgent(self.unique_id, self, self.algorithm)
                 elif agent_type == 'B':
                     newAgent = BoxAgent(self.unique_id, self, self.algorithm)
+                    agents_to_assign.append(newAgent)  # Añade la caja a la lista para asignación
                 elif agent_type == 'M':
                     newAgent = GoalAgent(self.unique_id, self)
                     self.goal_position = (x, y)
@@ -45,6 +47,22 @@ class LabyrinthModel(Model):
                 self.schedule.add(newAgent)
                 self.grid.place_agent(newAgent, (x, y))
                 self.unique_id += 1
+
+        # Asigna robots y metas después de crear todos los agentes
+        print('agents_to_assign', agents_to_assign)
+
+        for box in agents_to_assign:
+            box.assigned_robot = self.assign_robot_to_box(box)
+            box.assigned_goal = self.assign_goal_to_box(box)
+            print('box rob met: ', box.assigned_robot)
+
+            # Asigna la caja a los agentes Robot y Meta
+            if box.assigned_robot:
+                box.assigned_robot.set_assigned_box(box)
+                print('assigned robot: ', box.assigned_robot.pos)
+            if box.assigned_goal:
+                box.assigned_goal.set_assigned_box(box)
+                print('assigned goal: ', box.assigned_goal.pos)
 
     def step(self) -> None:
         self.schedule.step()
@@ -72,3 +90,23 @@ class LabyrinthModel(Model):
 
     def get_goal_position(self):
         return self.goal_position
+
+    def assign_robot_to_box(self, box):
+        robots = [agent for agent in self.schedule.agents if isinstance(agent, RobotAgent) and agent.assigned_box is None]
+        if not robots:
+            return None  # Si no hay robots no asignados, no se puede asignar ninguno
+        # Encuentra el robot más cercano que no esté asignado a una caja
+        closest_robot = min(robots, key=lambda robot: self.calculate_distance(box.pos, robot.pos))
+        return closest_robot
+
+    def assign_goal_to_box(self, box):
+        goals = [agent for agent in self.schedule.agents if isinstance(agent, GoalAgent) and agent.assigned_box is None]
+        if not goals:
+            return None  # Si no hay metas no asignadas, no se puede asignar ninguna
+        # Encuentra la meta más cercana que no esté asignada a una caja
+        closest_goal = min(goals, key=lambda goal: self.calculate_distance(box.pos, goal.pos))
+        return closest_goal
+
+    @staticmethod
+    def calculate_distance(pos1, pos2):
+        return abs(pos2[0]*10 - pos1[0]*10) + abs(pos2[1]*10 - pos1[1]*10)

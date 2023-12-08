@@ -12,6 +12,7 @@ class RobotAgent(Agent):
         self.expansion_nodes = None
         self.order_counter = 1
         self.robot_move_finished = False
+        self.assigned_box = None # Atributo para almacenar la caja asignada
 
     def step(self) -> None:
         if self.path is None:  # Solo ejecutar el algoritmo si no hay un camino calculado.
@@ -42,7 +43,7 @@ class RobotAgent(Agent):
             self.robot_move_finished = True
 
     def calculate_path(self):
-        self.path, self.expansion_nodes = self.algorithm.search(self.pos, self.model.get_goal_position()) #Cambiar para que se ejecute desde la posicion inicial deel robot
+        self.path, self.expansion_nodes = self.algorithm.search(self.pos, self.assigned_box.assigned_goal.pos) #Cambiar para que se ejecute desde la posicion inicial deel robot
         print("Posicion demeta: ", self.model.get_goal_position())
         print("Ruta del algoritmo:", self.path)
         print("Nodos de expansion:", self.expansion_nodes)
@@ -62,3 +63,6 @@ class RobotAgent(Agent):
 
     def is_robot_move_finished(self):
         return self.robot_move_finished
+
+    def set_assigned_box(self, box):
+        self.assigned_box = box
