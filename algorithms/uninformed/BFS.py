@@ -10,7 +10,7 @@ class BFS(BaseAlgorithm):
 
     def search(self, start: tuple[int, int], goal: tuple[int, int]) -> tuple[list[tuple[int, int]], list[tuple[int, int]]]:
         if not self.is_valid_move(start) or not self.is_valid_move(goal):
-            raise ValueError("Start and end must be valid coordinates")   #Manejar Error propio
+            raise ValueError("Start and end must be valid coordinates", ' start: ', start, ' end: ', start)   #Manejar Error propio
 
         queue = [start]
         came_from = {start: None}
@@ -48,7 +48,7 @@ class BFS(BaseAlgorithm):
 
         cell_contents = self.grid.get_cell_list_contents(pos)
         for content in cell_contents:
-            if isinstance(content, WallAgent) or isinstance(content, BoxAgent):
+            if isinstance(content, WallAgent):
                 return False
 
         return True

@@ -58,7 +58,7 @@ class AStar(BaseAlgorithm):
 
         cell_contents = self.grid.get_cell_list_contents(pos)
         for content in cell_contents:
-            if isinstance(content, WallAgent) or isinstance(content, BoxAgent):
+            if isinstance(content, WallAgent):
                 return False
 
         return True
