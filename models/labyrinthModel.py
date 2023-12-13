@@ -20,13 +20,14 @@ class LabyrinthModel(Model):
         self.num_agents = number_of_agents
         self.map = map
         self.grid = MultiGrid(width, height, torus=False)
-        self.algorithm = AlgorithmFactory.create_algorithm(algorithm_choice, grid=self.grid, heuristic_function=heuristic_choice)
+        self.algorithm = AlgorithmFactory.create_algorithm(algorithm_choice, grid=self.grid,
+                                                           heuristic_function=heuristic_choice)
         self.schedule = RandomActivation(self)
         self.algorithms_finished = False
         self.goal_position = None
         self.running = True
-        agents_to_assign = []  # Lista para almacenar las cajas que necesitan asignación
 
+        agents_to_assign = []  # Lista para almacenar las cajas que necesitan asignación
         for agent_type, coordinates in map.items():
             for coordinate in coordinates:
                 y, x = coordinate
@@ -54,7 +55,7 @@ class LabyrinthModel(Model):
         for box in agents_to_assign:
             box.assigned_robot = self.assign_robot_to_box(box)
             box.assigned_goal = self.assign_goal_to_box(box)
-            print('box rob met: ', box.assigned_robot)
+            print('box: ', box.pos)
 
             # Asigna la caja a los agentes Robot y Meta
             if box.assigned_robot:
@@ -65,15 +66,20 @@ class LabyrinthModel(Model):
                 print('assigned goal: ', box.assigned_goal.pos)
 
     def step(self) -> None:
-        self.schedule.step()
-        if not self.algorithms_finished:
-            # Verifica si todos los agentes han terminado sus algoritmos
-            all_box_agents_finished = all(
-                agent.is_algorithm_finished() and agent.is_box_move_finished() for agent in self.schedule.agents if isinstance(agent, BoxAgent))
+        box_agents = [agent for agent in self.schedule.agents if isinstance(agent, BoxAgent)]
+        for agent in box_agents:
+            agent.step()
 
-            if all_box_agents_finished:
-                self.algorithms_finished = True
-                self.running = False  # Detiene la simulación
+        # Verifica si todos los agentes han terminado sus algoritmos
+        # all_box_agents_finished = all(
+        #     agent.is_algorithm_finished() and agent.is_box_move_finished() for agent in self.schedule.agents if
+        #     isinstance(agent, BoxAgent))
+        all_box_agents_finished = all(agent.is_box_move_finished() for agent in self.schedule.agents if
+                                      isinstance(agent, BoxAgent))
+
+        if all_box_agents_finished:
+            self.algorithms_finished = True
+            self.running = False  # Detiene la simulación
 
     def create_expansion_agents(self, expansion_nodes, order_counter):
         for node_position in expansion_nodes:
@@ -92,7 +98,8 @@ class LabyrinthModel(Model):
         return self.goal_position
 
     def assign_robot_to_box(self, box):
-        robots = [agent for agent in self.schedule.agents if isinstance(agent, RobotAgent) and agent.assigned_box is None]
+        robots = [agent for agent in self.schedule.agents if
+                  isinstance(agent, RobotAgent) and agent.assigned_box is None]
         if not robots:
             return None  # Si no hay robots no asignados, no se puede asignar ninguno
         # Encuentra el robot más cercano que no esté asignado a una caja
@@ -109,4 +116,4 @@ class LabyrinthModel(Model):
 
     @staticmethod
     def calculate_distance(pos1, pos2):
-        return abs(pos2[0]*10 - pos1[0]*10) + abs(pos2[1]*10 - pos1[1]*10)
+        return abs(pos2[0] * 10 - pos1[0] * 10) + abs(pos2[1] * 10 - pos1[1] * 10)

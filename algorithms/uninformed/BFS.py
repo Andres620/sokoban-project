@@ -9,7 +9,7 @@ class BFS(BaseAlgorithm):
         self.priority_order = priority_order
 
     def search(self, start: tuple[int, int], goal: tuple[int, int]) -> tuple[list[tuple[int, int]], list[tuple[int, int]]]:
-        if not self.is_valid_move(start) or not self.is_valid_move(goal):
+        if not self.is_valid_move(start, include_box_agent=False) or not self.is_valid_move(goal, include_box_agent=True):
             raise ValueError("Start and end must be valid coordinates", ' start: ', start, ' end: ', start)   #Manejar Error propio
 
         queue = [start]
@@ -25,7 +25,11 @@ class BFS(BaseAlgorithm):
             for dx, dy in self.priority_order:
                 x, y = current
                 neighbor = (x + dx, y + dy)
-                if self.is_valid_move(neighbor) and neighbor not in came_from :
+                opposite_neighbor = (x - dx, y - dy)  # Posición opuesta
+
+                if self.is_valid_move(neighbor, include_box_agent=False) and \
+                        self.is_valid_move(opposite_neighbor, include_box_agent=False) and neighbor not in came_from:
+                    queue.append(neighbor)
                     queue.append(neighbor)
                     came_from[neighbor] = current
                     expansion_nodes.append(neighbor)
@@ -42,7 +46,7 @@ class BFS(BaseAlgorithm):
 
         return path, expansion_nodes
 
-    def is_valid_move(self, pos: tuple[int, int]):
+    def is_valid_move(self, pos: tuple[int, int], include_box_agent: bool = False):
         if self.grid.out_of_bounds(pos):
             return False
 
@@ -50,13 +54,15 @@ class BFS(BaseAlgorithm):
         for content in cell_contents:
             if isinstance(content, WallAgent):
                 return False
+            if include_box_agent and isinstance(content, BoxAgent):
+                return False
 
         return True
 
     def get_orthogonal_neighbors(self, position):
         x, y = position
         neighbors = [(x + dx, y + dy) for dx, dy in self.priority_order]
-        return [neighbor for neighbor in neighbors if self.is_valid_move(neighbor)]
+        return [neighbor for neighbor in neighbors if self.is_valid_move(neighbor, include_box_agent=True)]
 
     def update_grid(self, grid):
         self.grid = grid

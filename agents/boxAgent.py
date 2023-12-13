@@ -18,43 +18,26 @@ class BoxAgent(Agent):
     def step(self) -> None:
         if self.path is None:  # Solo ejecutar el algoritmo si no hay un camino calculado.
             self.calculate_path()
-        if self.expansion_nodes:  # Si hay nodos de expansion, los crea (Esto quitarlo para no dibjar nodos expansion solo el cmaino)
-            self.model.create_expansion_agents([self.expansion_nodes.pop(0)], self.order_counter)
-            self.order_counter += 1
+        # if self.expansion_nodes:  # Si hay nodos de expansion, los crea (Esto quitarlo para no dibjar nodos expansion solo el cmaino)
+        #     self.model.create_expansion_agents([self.expansion_nodes.pop(0)], self.order_counter)
+        #     self.order_counter += 1
+        #
+        #     if not bool(self.expansion_nodes):
+        self.model.change_color_path(self.path)
 
-            if not bool(self.expansion_nodes):
-                self.model.change_color_path(self.path)
-
-        if self.is_algorithm_finished():
-            self.move()
-        # if self.path is None:  # Solo ejecutar el algoritmo si no hay un camino calculado.
-        #     self.calculate_path()
-        # if self.expansion_nodes:  # Si hay nodos de expansion, los crea
-        #     self.model.create_expansion_agents([self.expansion_nodes.pop(0)])
-        # self.move()
+        # if self.is_algorithm_finished():
+        self.move()
 
     def move(self) -> None:
         if self.path:
-            if not hasattr(self, 'path_copy'):  # Verifica si la copia ya se ha hecho
-                self.path_copy = self.path.copy()
-
-            new_position = self.path_copy.pop(0)
+            new_position = self.path.pop(0)
             self.model.grid.move_agent(self, new_position)
-
-            if not self.path_copy:
-                self.is_move_finished = True
-                print("Ruta terminada")
-                del self.path_copy
         else:
             self.is_move_finished = True
-        # if self.path:
-        #     new_position = self.path.pop(0)
-        #     self.model.grid.move_agent(self, new_position)
-        # else:
-        #     print("Ruta terminada")
+            print("Ruta terminada")
 
     def calculate_path(self):
-        self.path, self.expansion_nodes = self.algorithm.search(self.pos, self.model.get_goal_position()) #Cambiar para que se ejecute desde la posicion inicial deel robot
+        self.path, self.expansion_nodes = self.algorithm.search(self.pos, self.assigned_goal.pos) #Cambiar para que se ejecute desde la posicion inicial deel robot
         print("Posicion demeta: ", self.assigned_goal.pos)
         print("Ruta del algoritmo:", self.path)
         print("Nodos de expansion:", self.expansion_nodes)
