@@ -4,13 +4,16 @@ from algorithms.baseAlgorithm import BaseAlgorithm
 
 
 class BFS(BaseAlgorithm):
-    def __init__(self, grid, priority_order=[(-1, 0), (0, 1), (1, 0), (0, -1)]): # Izquierda, Arriba, Derecha, Abajo
+    def __init__(self, grid, priority_order=[(-1, 0), (0, 1), (1, 0), (0, -1)]):  # Izquierda, Arriba, Derecha, Abajo
         self.grid = grid
         self.priority_order = priority_order
 
-    def search(self, start: tuple[int, int], goal: tuple[int, int]) -> tuple[list[tuple[int, int]], list[tuple[int, int]]]:
-        if not self.is_valid_move(start, include_box_agent=False) or not self.is_valid_move(goal, include_box_agent=True):
-            raise ValueError("Start and end must be valid coordinates", ' start: ', start, ' end: ', start)   #Manejar Error propio
+    def search(self, start: tuple[int, int], goal: tuple[int, int]) -> tuple[
+        list[tuple[int, int]], list[tuple[int, int]]]:
+        if not self.is_valid_move(start, include_box_agent=False) or not self.is_valid_move(goal,
+                                                                                            include_box_agent=True):
+            raise ValueError("Start and end must be valid coordinates", ' start: ', start, ' end: ',
+                             start)  # Manejar Error propio
 
         queue = [start]
         came_from = {start: None}
@@ -27,8 +30,8 @@ class BFS(BaseAlgorithm):
                 neighbor = (x + dx, y + dy)
                 opposite_neighbor = (x - dx, y - dy)  # Posición opuesta
 
-                if self.is_valid_move(neighbor, include_box_agent=False) and \
-                        self.is_valid_move(opposite_neighbor, include_box_agent=False) and neighbor not in came_from:
+                if self.is_valid_move(neighbor, include_box_agent=False) and self.is_valid_move(opposite_neighbor,
+                                                                                               include_box_agent=False) and neighbor not in came_from:
                     queue.append(neighbor)
                     queue.append(neighbor)
                     came_from[neighbor] = current

@@ -21,7 +21,8 @@ class LabyrinthModel(Model):
         self.map = map
         self.grid = MultiGrid(width, height, torus=False)
         self.algorithm = AlgorithmFactory.create_algorithm(algorithm_choice, grid=self.grid,
-                                                           heuristic_function=heuristic_choice)
+                                                           heuristic_function=heuristic_choice,
+                                                           priority_order=[(0, -1), (0, 1), (-1, 0), (1, 0)])
         self.schedule = RandomActivation(self)
         self.algorithms_finished = False
         self.goal_position = None
@@ -66,20 +67,33 @@ class LabyrinthModel(Model):
                 print('assigned goal: ', box.assigned_goal.pos)
 
     def step(self) -> None:
+        # Obtener todos los agentes de caja
         box_agents = [agent for agent in self.schedule.agents if isinstance(agent, BoxAgent)]
-        for agent in box_agents:
-            agent.step()
 
-        # Verifica si todos los agentes han terminado sus algoritmos
-        # all_box_agents_finished = all(
-        #     agent.is_algorithm_finished() and agent.is_box_move_finished() for agent in self.schedule.agents if
-        #     isinstance(agent, BoxAgent))
-        all_box_agents_finished = all(agent.is_box_move_finished() for agent in self.schedule.agents if
-                                      isinstance(agent, BoxAgent))
+        # Filtrar los agentes que aún no han terminado su algoritmo o movimiento
+        active_box_agents = [agent for agent in box_agents if
+                             not agent.is_algorithm_finished() or not agent.is_box_move_finished()]
+
+        # Verificar si hay agentes activos
+        if active_box_agents:
+            # Seleccionar el primer agente activo
+            active_agent = active_box_agents[0]
+
+            # Ejecutar el paso del agente activo
+            active_agent.step()
+
+            # Verificar si el agente activo ha terminado su movimiento
+            if active_agent.is_move_finished:
+                # Eliminar al agente activo de la lista de agentes activos
+                active_box_agents.remove(active_agent)
+
+        # Verificar si todos los agentes han terminado
+        all_box_agents_finished = all(
+            agent.is_algorithm_finished() and agent.is_box_move_finished() for agent in box_agents)
 
         if all_box_agents_finished:
             self.algorithms_finished = True
-            self.running = False  # Detiene la simulación
+            self.running = False  # Detener la simulación
 
     def create_expansion_agents(self, expansion_nodes, order_counter):
         for node_position in expansion_nodes:
