@@ -14,6 +14,9 @@ class BoxAgent(Agent):
 
         self.is_move_finished = False
         self.order_counter = 1
+        self.has_collision = False
+        self.collision_agent = None
+        self.free_position = None
 
     def step(self) -> None:
         if self.path is None:  # Solo ejecutar el algoritmo si no hay un camino calculado.
@@ -31,19 +34,22 @@ class BoxAgent(Agent):
     def move(self) -> None:
         if self.path:
             new_position = self.path.pop(0)
-
             # Verificar si hay colisión en la nueva posición
             collision_agents = self.model.grid.get_cell_list_contents(new_position)
 
-            if any(isinstance(agent, BoxAgent) for agent in collision_agents):
+            if any(isinstance(agent, BoxAgent) for agent in collision_agents if agent != self):
                 # Hay una colisión, intentar mover el agente colisionado a una posición libre
                 for agent in collision_agents:
                     if isinstance(agent, BoxAgent):
-                        free_position = self.find_free_position(agent, self.path)
-                        self.model.grid.move_agent(agent, free_position)
-
-            self.model.grid.move_agent(self, new_position)
+                        print("agent estorbo: ", agent.pos)
+                        self.has_collision = True
+                        self.collision_agent = agent
+                        self.free_position = self.find_free_position(agent, self.path)
+                        print("free_position: ", self.free_position)
+            else:
+                self.model.grid.move_agent(self, new_position)
         else:
+            self.path = None
             self.is_move_finished = True
             print("Ruta terminada")
 

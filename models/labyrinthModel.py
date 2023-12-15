@@ -27,6 +27,7 @@ class LabyrinthModel(Model):
         self.algorithms_finished = False
         self.goal_position = None
         self.running = True
+        self.active_box_agents = []
 
         agents_to_assign = []  # Lista para almacenar las cajas que necesitan asignación
         for agent_type, coordinates in map.items():
@@ -71,25 +72,54 @@ class LabyrinthModel(Model):
         box_agents = [agent for agent in self.schedule.agents if isinstance(agent, BoxAgent)]
 
         # Filtrar los agentes que aún no han terminado su algoritmo o movimiento
-        active_box_agents = [agent for agent in box_agents if
-                             not agent.is_algorithm_finished() or not agent.is_box_move_finished()]
+        # Calcular active_box_agents solo si no está calculado
+        if not self.active_box_agents:
+            self.active_box_agents = [agent for agent in box_agents if
+                                 not agent.is_algorithm_finished() or not agent.is_box_move_finished()]
+
+        continue_active_step = True
 
         # Verificar si hay agentes activos
-        if active_box_agents:
+        if self.active_box_agents:
+            print("Lista activos: ", self.active_box_agents)
             # Seleccionar el primer agente activo
-            active_agent = active_box_agents[0]
+            active_agent = self.active_box_agents[0]
 
-            # Ejecutar el paso del agente activo
-            active_agent.step()
+            # Verificar si hay un agente colisionado que necesita moverse completamente
+            if active_agent.has_collision:
+                collision_agent = active_agent.collision_agent
+                free_position = active_agent.find_free_position(collision_agent, active_agent.path)
+                print("Free pos desde model: ", free_position)
+                path_to_free_position, expansion_nodes = collision_agent.algorithm.search(collision_agent.pos, free_position)
+                print("path_to_free_position desde model: ", path_to_free_position)
+                active_agent.has_collision = False
+                collision_agent.path = path_to_free_position
+                collision_agent.expansion_nodes = expansion_nodes
+                # Colocar el collision_agent en la posición 0
+                self.active_box_agents.remove(collision_agent)
+                self.active_box_agents.insert(0, collision_agent)
+                active_agent = self.active_box_agents[0]
+                continue_active_step = False
+
+            # Ejecutar el paso del agente activo solo si el collision_agent ha terminado su movimiento
+            if continue_active_step:
+                active_agent.step()
 
             # Verificar si el agente activo ha terminado su movimiento
             if active_agent.is_move_finished:
                 # Eliminar al agente activo de la lista de agentes activos
-                active_box_agents.remove(active_agent)
+                self.active_box_agents.remove(active_agent)
+
 
         # Verificar si todos los agentes han terminado
         all_box_agents_finished = all(
             agent.is_algorithm_finished() and agent.is_box_move_finished() for agent in box_agents)
+
+        if all_box_agents_finished:
+            for agent in box_agents:
+                if not agent.pos == agent.assigned_goal.pos:
+                    agent.is_move_finished = False
+                    all_box_agents_finished = False
 
         if all_box_agents_finished:
             self.algorithms_finished = True
