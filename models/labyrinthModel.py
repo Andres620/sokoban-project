@@ -88,15 +88,8 @@ class LabyrinthModel(Model):
             # Verificar si hay un agente colisionado que necesita moverse completamente
             if active_agent.has_collision:
                 collision_agent = active_agent.collision_agent
-                free_position = active_agent.find_free_position(collision_agent, active_agent.path)
-                print("Free pos desde model: ", free_position)
-                path_to_free_position, expansion_nodes = collision_agent.algorithm.search(collision_agent.pos, free_position)
-                print("path_to_free_position desde model: ", path_to_free_position)
                 active_agent.has_collision = False
-                collision_agent.path = path_to_free_position
-                collision_agent.expansion_nodes = expansion_nodes
-                # Colocar el collision_agent en la posición 0
-                self.active_box_agents.remove(collision_agent)
+                self.active_box_agents.remove(collision_agent)   # Colocar el collision_agent en la posición 0
                 self.active_box_agents.insert(0, collision_agent)
                 active_agent = self.active_box_agents[0]
                 continue_active_step = False

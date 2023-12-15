@@ -41,10 +41,11 @@ class BoxAgent(Agent):
                 # Hay una colisión, intentar mover el agente colisionado a una posición libre
                 for agent in collision_agents:
                     if isinstance(agent, BoxAgent):
-                        print("agent estorbo: ", agent.pos)
                         self.has_collision = True
                         self.collision_agent = agent
                         self.free_position = self.find_free_position(agent, self.path)
+                        self.collision_agent.path, self.collision_agent.expansion_nodes = self.algorithm.search(
+                                                                                        agent.pos, self.free_position)
                         print("free_position: ", self.free_position)
             else:
                 self.model.grid.move_agent(self, new_position)
