@@ -18,10 +18,12 @@ class BoxAgent(Agent):
         self.collision_agent = None
         self.free_position = None
         self.push_position = None
+        self.new_position = None
 
     def step(self) -> None:
         if self.path is None:  # Solo ejecutar el algoritmo si no hay un camino calculado.
             self.calculate_path()
+            self.path = self.path[1:]
         if self.expansion_nodes:  # Si hay nodos de expansion, los crea (Esto quitarlo para no dibjar nodos expansion solo el cmaino)
             self.model.create_expansion_agents([self.expansion_nodes.pop(0)], self.order_counter)
             self.order_counter += 1
@@ -34,11 +36,11 @@ class BoxAgent(Agent):
 
     def move(self) -> None:
         if self.path:
-            new_position = self.path.pop(0)
-            self.push_position = self.get_push_position(new_position) # Posición donde el robot debe ir para empujarl a caja
+            self.new_position = self.path[0]
+            self.push_position = self.get_push_position(self.new_position) # Posición donde el robot debe ir para empujarl a caja
             print('Desde BOX - Box position: {} Push position: {}  '.format(self.pos, self.push_position))
             # Verificar si hay colisión en la nueva posición
-            collision_agents = self.model.grid.get_cell_list_contents(new_position)
+            collision_agents = self.model.grid.get_cell_list_contents(self.new_position)
 
             if any(isinstance(agent, BoxAgent) for agent in collision_agents if agent != self):
                 # Hay una colisión, intentar mover el agente colisionado a una posición libre
@@ -49,13 +51,17 @@ class BoxAgent(Agent):
                         self.free_position = self.find_free_position(agent, self.path)
                         self.collision_agent.path, self.collision_agent.expansion_nodes = self.algorithm.search(
                                                                                         agent.pos, self.free_position)
-                        print("free_position: ", self.free_position)
-            else:
-                self.model.grid.move_agent(self, new_position)
+                        self.collision_agent.path = self.collision_agent.path[1:]
+
         else:
             self.path = None
             self.is_move_finished = True
+            self.push_position = None
             print("Ruta terminada")
+
+    def push(self):
+        self.new_position = self.path.pop(0)
+        self.model.grid.move_agent(self, self.new_position)
 
     def find_free_position(self, agent, active_agent_path):
         # Implementar lógica para encontrar la posición libre más cercana y empujable

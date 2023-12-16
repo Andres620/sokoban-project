@@ -1,8 +1,8 @@
 C, C, C, C, C, C, C, C, C, C, C, C, C, R, C,
 C, R, R, R, C, R, R, R, C, C, R, C, C, C, C,
-C, C-a, C-a, C, C, R, M, R, R, C, C, R, C, C, C,
+C, C-a, C-a, C, C, R, M, R, R, C, C, R, C, C, M,
 C, R, C, C, C, R, C, C, C, C, C, R, R, C, R,
 C, C, R, C, C, R, C, R, R, C, R, R, C, C, R,
-C, C, C-b, C-b, C, C, C, C, C, M, C, C, C, C, R,
+C, C, C-b, C-b, C, C, C, C, C, C, C, C, C, C, R,
 C, C, C, C, C, C, C, C, C, C, C, C, C, C, C,
 

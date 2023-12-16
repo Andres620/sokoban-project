@@ -8,7 +8,7 @@ class DFS(BaseAlgorithm):
         self.grid = grid
         self.priority_order = priority_order
 
-    def search(self, start: tuple[int, int], goal: tuple[int, int], take_opposite=True) -> tuple[list[tuple[int, int]], list[tuple[int, int]]]:
+    def search(self, start: tuple[int, int], goal: tuple[int, int], take_opposite=True, include_box_agent=False) -> tuple[list[tuple[int, int]], list[tuple[int, int]]]:
         if not self.is_valid_move(start) or not self.is_valid_move(goal):
             raise ValueError("Start and end must be valid coordinates")
 
