@@ -17,6 +17,7 @@ class BoxAgent(Agent):
         self.has_collision = False
         self.collision_agent = None
         self.free_position = None
+        self.push_position = None
 
     def step(self) -> None:
         if self.path is None:  # Solo ejecutar el algoritmo si no hay un camino calculado.
@@ -34,6 +35,8 @@ class BoxAgent(Agent):
     def move(self) -> None:
         if self.path:
             new_position = self.path.pop(0)
+            self.push_position = self.get_push_position(new_position) # Posición donde el robot debe ir para empujarl a caja
+            print('Desde BOX - Box position: {} Push position: {}  '.format(self.pos, self.push_position))
             # Verificar si hay colisión en la nueva posición
             collision_agents = self.model.grid.get_cell_list_contents(new_position)
 

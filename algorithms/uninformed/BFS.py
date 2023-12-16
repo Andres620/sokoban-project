@@ -8,12 +8,13 @@ class BFS(BaseAlgorithm):
         self.grid = grid
         self.priority_order = priority_order
 
-    def search(self, start: tuple[int, int], goal: tuple[int, int]) -> tuple[
+    def search(self, start: tuple[int, int], goal: tuple[int, int], take_opposite=True) -> tuple[
         list[tuple[int, int]], list[tuple[int, int]]]:
         if not self.is_valid_move(start, include_box_agent=False) or not self.is_valid_move(goal,
                                                                                             include_box_agent=True):
-            raise ValueError("Start and end must be valid coordinates", ' start: ', start, ' end: ',
-                             start)  # Manejar Error propio
+            # raise ValueError("Start and end must be valid coordinates", ' start: ', start, ' end: ',
+            #                  start)  # Manejar Error propio
+            return [[],[]]
 
         queue = [start]
         came_from = {start: None}
@@ -30,12 +31,18 @@ class BFS(BaseAlgorithm):
                 neighbor = (x + dx, y + dy)
                 opposite_neighbor = (x - dx, y - dy)  # Posición opuesta
 
-                if self.is_valid_move(neighbor, include_box_agent=False) and self.is_valid_move(opposite_neighbor,
-                                                                                               include_box_agent=False) and neighbor not in came_from:
-                    queue.append(neighbor)
-                    queue.append(neighbor)
-                    came_from[neighbor] = current
-                    expansion_nodes.append(neighbor)
+                if self.is_valid_move(neighbor, include_box_agent=False) and neighbor not in came_from:
+                    if take_opposite:
+                        if self.is_valid_move(opposite_neighbor,include_box_agent=False):
+                            queue.append(neighbor)
+                            queue.append(neighbor)
+                            came_from[neighbor] = current
+                            expansion_nodes.append(neighbor)
+                    else:
+                        queue.append(neighbor)
+                        queue.append(neighbor)
+                        came_from[neighbor] = current
+                        expansion_nodes.append(neighbor)
 
         path = []
         current = goal

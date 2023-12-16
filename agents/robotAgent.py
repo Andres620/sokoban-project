@@ -15,15 +15,24 @@ class RobotAgent(Agent):
         self.assigned_box = None # Atributo para almacenar la caja asignada
 
     def step(self) -> None:
-        pass
+        if self.path is None:  # Solo ejecutar el algoritmo si no hay un camino calculado.
+            push_position = self.assigned_box.push_position
+            if push_position:
+                print('Desde Robot - Box position: {} Push position: {}  '.format(self.assigned_box.pos, push_position))
+                self.calculate_path(self.pos, push_position)
+                print('Robot path: ', self.path)
+                self.model.grid.move_agent(self, push_position)
 
+        self.move()
 
     def move(self) -> None:
-        pass
+        if self.path:
+            new_position = self.path.pop(0)
+            self.model.grid.move_agent(self, new_position)
 
-    def calculate_path(self):
-        self.path, self.expansion_nodes = self.algorithm.search(self.pos, self.model.get_goal_position()) #Cambiar para que se ejecute desde la posicion inicial deel robot
-        print("Posicion demeta: ", self.model.get_goal_position())
+    def calculate_path(self, start, end):
+        self.path, self.expansion_nodes = self.algorithm.search(start, end, take_opposite = False)
+        print("Posicion de meta: ", self.model.get_goal_position())
         print("Ruta del algoritmo:", self.path)
         print("Nodos de expansion:", self.expansion_nodes)
 

@@ -81,7 +81,6 @@ class LabyrinthModel(Model):
 
         # Verificar si hay agentes activos
         if self.active_box_agents:
-            print("Lista activos: ", self.active_box_agents)
             # Seleccionar el primer agente activo
             active_agent = self.active_box_agents[0]
 
@@ -97,6 +96,7 @@ class LabyrinthModel(Model):
             # Ejecutar el paso del agente activo solo si el collision_agent ha terminado su movimiento
             if continue_active_step:
                 active_agent.step()
+                active_agent.assigned_robot.step()
 
             # Verificar si el agente activo ha terminado su movimiento
             if active_agent.is_move_finished:
