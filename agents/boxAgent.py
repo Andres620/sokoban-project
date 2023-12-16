@@ -38,10 +38,10 @@ class BoxAgent(Agent):
         if self.path:
             self.new_position = self.path[0]
             self.push_position = self.get_push_position(self.new_position) # Posición donde el robot debe ir para empujarl a caja
-            print('Desde BOX - Box position: {} Push position: {}  '.format(self.pos, self.push_position))
             # Verificar si hay colisión en la nueva posición
             collision_agents = self.model.grid.get_cell_list_contents(self.new_position)
 
+            from agents.robotAgent import RobotAgent
             if any(isinstance(agent, BoxAgent) for agent in collision_agents if agent != self):
                 # Hay una colisión, intentar mover el agente colisionado a una posición libre
                 for agent in collision_agents:
@@ -52,6 +52,12 @@ class BoxAgent(Agent):
                         self.collision_agent.path, self.collision_agent.expansion_nodes = self.algorithm.search(
                                                                                         agent.pos, self.free_position)
                         self.collision_agent.path = self.collision_agent.path[1:]
+
+            elif any(isinstance(agent, RobotAgent) for agent in collision_agents if agent != self):
+                for agent in collision_agents:
+                    if isinstance(agent, RobotAgent):
+                        self.free_position = agent.find_free_position(self.path)
+                        self.model.grid.move_agent(agent, self.free_position)
 
         else:
             self.path = None
