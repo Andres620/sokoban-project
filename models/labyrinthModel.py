@@ -41,7 +41,10 @@ class LabyrinthModel(Model):
                 elif agent_type == 'C':
                     newAgent = PathAgent(self.unique_id, self)
                 elif agent_type == 'A':
-                    newAgent = RobotAgent(self.unique_id, self, self.algorithm)
+                    algorithm = AlgorithmFactory.create_algorithm('BFS', grid=self.grid,
+                                                           heuristic_function=heuristic_choice,
+                                                           priority_order=[(0, -1), (0, 1), (-1, 0), (1, 0)])
+                    newAgent = RobotAgent(self.unique_id, self, algorithm)
                     robots_to_assign.append(newAgent)
                 elif agent_type == 'B':
                     newAgent = BoxAgent(self.unique_id, self, self.algorithm)

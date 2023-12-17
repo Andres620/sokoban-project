@@ -8,7 +8,7 @@ from algorithms.heuristicFactory import HeuristicFactory
 
 
 class HillClimbing(BaseAlgorithm):
-    def __init__(self, grid, heuristic_function, priority_order=[(-1, 0), (0, 1), (1, 0), (0, -1)]):
+    def __init__(self, grid, heuristic_function, priority_order=[(-1, 0), (0, 1), (1, 0), (0, -1)]): #abajo, arriba, izquierda y derecha.
         self.grid = grid
         self.heuristic = HeuristicFactory.create_heuristic(heuristic_type=heuristic_function)
         self.priority_order = priority_order
@@ -34,11 +34,10 @@ class HillClimbing(BaseAlgorithm):
                 opposite_neighbor = (x - dx, y - dy)  # Posición opuesta
 
                 if self.is_valid_move(neighbor, include_box_agent=include_box_agent) and neighbor not in came_from:
+                    if neighbor in expansion_nodes:
+                        continue
                     if take_opposite:
                         if self.is_valid_move(opposite_neighbor,include_box_agent=False):
-                            if neighbor in expansion_nodes:
-                                continue
-
                             came_from[neighbor] = current
                             score = self.heuristic(goal, neighbor)
                             if score < next_node_score:
@@ -47,9 +46,6 @@ class HillClimbing(BaseAlgorithm):
                             else:
                                 other_neighbors.append(neighbor)
                     else:
-                        if neighbor in expansion_nodes:
-                            continue
-
                         came_from[neighbor] = current
                         score = self.heuristic(goal, neighbor)
                         if score < next_node_score:
