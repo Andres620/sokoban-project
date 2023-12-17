@@ -110,12 +110,14 @@ class LabyrinthModel(Model):
             # Verificar si el agente activo ha terminado su movimiento
             if active_agent.is_move_finished:
                 # Eliminar al agente activo de la lista de agentes activos
+                self.remove_all_expansion_agents() #Limpia la pantalla
                 self.active_box_agents.remove(active_agent)
 
         # Verificar si todos los agentes han terminado
         all_box_agents_finished = all(
             agent.is_algorithm_finished() and agent.is_box_move_finished() for agent in box_agents)
 
+        # Los agentes que no han temrinado se le cambia el is_move_finished a False
         if all_box_agents_finished:
             for agent in box_agents:
                 if not agent.pos == agent.assigned_goal.pos:
@@ -133,6 +135,12 @@ class LabyrinthModel(Model):
             self.schedule.add(expansion_agent)
             self.grid.place_agent(expansion_agent, node_position)
             self.unique_id += 1
+
+    def remove_all_expansion_agents(self):
+        expansion_agents = [agent for agent in self.schedule.agents if isinstance(agent, ExpansionAgent)]
+        for agent in expansion_agents:
+            self.grid.remove_agent(agent)
+            self.schedule.remove(agent)
 
     def change_color_path(self, path):
         for agent in self.schedule.agents:
