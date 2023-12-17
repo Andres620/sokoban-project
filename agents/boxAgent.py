@@ -24,15 +24,15 @@ class BoxAgent(Agent):
         if self.path is None:  # Solo ejecutar el algoritmo si no hay un camino calculado.
             self.calculate_path()
             self.path = self.path[1:]
-        # if self.expansion_nodes:  # Si hay nodos de expansion, los crea (Esto quitarlo para no dibjar nodos expansion solo el cmaino)
-        #     self.model.create_expansion_agents([self.expansion_nodes.pop(0)], self.order_counter)
-        #     self.order_counter += 1
-        #
-        # if not bool(self.expansion_nodes):
-        #     self.model.change_color_path(self.path)
-        #
-        # if self.is_algorithm_finished():
-        self.move()
+        if self.expansion_nodes:  # Si hay nodos de expansion, los crea (Esto quitarlo para no dibjar nodos expansion solo el cmaino)
+            self.model.create_expansion_agents([self.expansion_nodes.pop(0)], self.order_counter)
+            self.order_counter += 1
+
+        if not bool(self.expansion_nodes):
+            self.model.change_color_path(self.path)
+
+        if self.is_algorithm_finished():
+            self.move()
 
     def move(self) -> None:
         if self.path:

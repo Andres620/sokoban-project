@@ -11,8 +11,9 @@ class UCS(BaseAlgorithm):
         self.priority_order = priority_order
 
     def search(self, start: tuple[int, int], goal: tuple[int, int], take_opposite=True, include_box_agent=False) -> tuple[list[tuple[int, int]], list[tuple[int, int]]]:
-        if not self.is_valid_move(start) or not self.is_valid_move(goal):
-            raise ValueError("Start and end must be valid coordinates")  # Manejar Error propio
+        if not self.is_valid_move(start, include_box_agent=False) or not self.is_valid_move(goal,
+                                                                                            include_box_agent=True):
+            return [[],[]]
 
         queue = [(0, 0, start)]  # Inicializar la cola de prioridad con el costo acumulado, la preferencia y la posición
         came_from = {start: None}
@@ -27,14 +28,26 @@ class UCS(BaseAlgorithm):
             for dx, dy in self.priority_order:
                 x, y = current
                 neighbor = (x + dx, y + dy)
+                opposite_neighbor = (x - dx, y - dy)  # Posición opuesta
                 new_cost = cost_so_far[current] + 1  # Costo uniforme
 
-                if self.is_valid_move(neighbor) and neighbor not in came_from and (neighbor not in cost_so_far or new_cost < cost_so_far[neighbor]):
-                    cost_so_far[neighbor] = new_cost
-                    priority = (new_cost, self.priority_order.index((dx, dy)), neighbor)  # Agregar preferencia a la prioridad
-                    heapq.heappush(queue, priority)
-                    came_from[neighbor] = current
-                    expansion_nodes.append(neighbor)
+                if self.is_valid_move(neighbor, include_box_agent=include_box_agent) and neighbor not in came_from and \
+                        (neighbor not in cost_so_far or new_cost < cost_so_far[neighbor]):
+                    if take_opposite:
+                        if self.is_valid_move(opposite_neighbor, include_box_agent=False):
+                            cost_so_far[neighbor] = new_cost
+                            priority = (
+                                new_cost, self.priority_order.index((dx, dy)), neighbor)  # Agregar preferencia a la prioridad
+                            heapq.heappush(queue, priority)
+                            came_from[neighbor] = current
+                            expansion_nodes.append(neighbor)
+                    else:
+                        cost_so_far[neighbor] = new_cost
+                        priority = (
+                            new_cost, self.priority_order.index((dx, dy)), neighbor)  # Agregar preferencia a la prioridad
+                        heapq.heappush(queue, priority)
+                        came_from[neighbor] = current
+                        expansion_nodes.append(neighbor)
             print('pop: ', current,' Cola prioridad: ', queue)
 
         path = []
@@ -49,13 +62,15 @@ class UCS(BaseAlgorithm):
 
         return path, expansion_nodes
 
-    def is_valid_move(self, pos: tuple[int, int]):
+    def is_valid_move(self, pos: tuple[int, int], include_box_agent: bool = False):
         if self.grid.out_of_bounds(pos):
             return False
 
         cell_contents = self.grid.get_cell_list_contents(pos)
         for content in cell_contents:
             if isinstance(content, WallAgent):
+                return False
+            if include_box_agent and isinstance(content, BoxAgent):
                 return False
 
         return True
