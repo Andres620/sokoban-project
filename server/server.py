@@ -14,7 +14,7 @@ from utils.fileUtils import *
 NUM_ROWS = 0
 NUM_COLS = 0
 SIZE_OF_CANVAS_IN_PIXELS_X = 500
-SIZE_OF_CANVAS_IN_PIXELS_Y = 500
+SIZE_OF_CANVAS_IN_PIXELS_Y = 400
 
 
 #Carga del archivo
