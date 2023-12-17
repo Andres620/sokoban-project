@@ -13,41 +13,59 @@ class HillClimbing(BaseAlgorithm):
         self.heuristic = HeuristicFactory.create_heuristic(heuristic_type=heuristic_function)
         self.priority_order = priority_order
 
-    def search(self, start: tuple[int, int], goal: tuple[int, int], take_opposite=True, include_box_agent=False) -> tuple[list[tuple[int, int]], list[tuple[int, int]]]:
+    def search(self, start: tuple[int, int], goal: tuple[int, int], take_opposite=True, include_box_agent=False) -> tuple[
+        list[tuple[int, int]], list[tuple[int, int]]]:
         if not self.is_valid_move(start, include_box_agent=False) or not self.is_valid_move(goal,
                                                                                             include_box_agent=True):
-            return [[],[]]
+            return [[], []]
 
-        frontier = [(self.heuristic(goal, start), 0, start)]  # (heurística, nivel, posición)
-        came_from = {}
-        expansion_nodes = []
-        max_level = 0
+        current = start
+        came_from = {start: None}
+        expansion_nodes = [current]
+        other_neighbors = []
 
-        while frontier:
-            print('Cola de prioridad:', frontier)
-            _, level, current = heapq.heappop(frontier)
-            max_level = max(max_level, level)
-            print('Current: ', current, ' level: ', level)
-            if current != start:
-                expansion_nodes.append(current)
-
-            if current == goal:
-                break
+        while current != goal:
+            next_node = None
+            next_node_score = float("inf")
 
             for dx, dy in self.priority_order:
                 x, y = current
                 neighbor = (x + dx, y + dy)
                 opposite_neighbor = (x - dx, y - dy)  # Posición opuesta
-                new_heuristic = self.heuristic(goal, neighbor)
 
                 if self.is_valid_move(neighbor, include_box_agent=include_box_agent) and neighbor not in came_from:
                     if take_opposite:
                         if self.is_valid_move(opposite_neighbor,include_box_agent=False):
-                            heapq.heappush(frontier, (new_heuristic, max_level + 1, neighbor))
+                            if neighbor in expansion_nodes:
+                                continue
+
                             came_from[neighbor] = current
+                            score = self.heuristic(goal, neighbor)
+                            if score < next_node_score:
+                                next_node_score = score
+                                next_node = neighbor
+                            else:
+                                other_neighbors.append(neighbor)
                     else:
-                        heapq.heappush(frontier, (new_heuristic, max_level + 1, neighbor))
+                        if neighbor in expansion_nodes:
+                            continue
+
                         came_from[neighbor] = current
+                        score = self.heuristic(goal, neighbor)
+                        if score < next_node_score:
+                            next_node_score = score
+                            next_node = neighbor
+                        else:
+                            other_neighbors.append(neighbor)
+
+            if next_node is None:
+                if not other_neighbors:
+                    return [], expansion_nodes
+                next_node = other_neighbors.pop(0)
+
+            current = next_node
+            expansion_nodes.append(current)
+
         path = []
         current = goal
         while current != start:
@@ -55,7 +73,6 @@ class HillClimbing(BaseAlgorithm):
             current = came_from.get(current, None)
             if current is None:
                 return [], expansion_nodes
-
         path.append(start)
         path.reverse()
 
