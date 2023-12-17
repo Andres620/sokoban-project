@@ -5,4 +5,3 @@ C, R, C, C, C, R, C, C, C, C, C, R, R, C, R,
 C, C, R, C, C, R, C, R, R, C, R, R, C, C, R,
 C, C, C-b, C-b, C, C, C, C, C, C, C, C, C, C, R,
 C, C, C, C, C, C, C, C, C, C, C, C, C, C, C,
-
