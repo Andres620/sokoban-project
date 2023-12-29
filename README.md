@@ -38,7 +38,7 @@ Para este proyecto pueden varias cajas (que se identificarán con la letra “b�
 cada una de ellas un robot (que se identificarán con la letra “a”). Los robots
 transportarán las cajas que se asignen en la carga del mapa correspondiente.
 
-![imagen 1](/ruta/a/la/image1.jpg)
+![imagen 1](/images/image1.JPG)
 
 Representación Mapa Mapa real
 El mundo se debe poder cargar desde un archivo plano, el cual es representado en
@@ -89,7 +89,7 @@ Primero a la izquierda, arriba, derecha y abajo.
 Una vez se seleccione el algoritmo, en el mapa se debe de mostrar el orden de los
 nodos como se expandieron para dar tal solución. Ejemplo búsqueda en anchura.
 
-![imagen 2](/ruta/a/la/image2.jpg)
+![imagen 2](/images/image2.JPG)
 
 Segunda entrega
 En esta entrega los agentes deberán resolver el problema de llevar las cajas al
@@ -107,7 +107,7 @@ anchura
 
 Archivo de texto: Búsqueda en anchura
 
-![imagen 3](/ruta/a/la/image3.jpg)
+![imagen 3](/images/image3.JPG)
 
 Luego de encontrar el camino para cada una de las cajas, evitando atascos, se debe
 programar la lógica del robot para que lleve la caja al destino, teniendo especial
@@ -119,4 +119,4 @@ https://youtu.be/5fdVSfprZ54?si=Oam4X58fD7rx96Yr
 
 
 # ARQUITECTURA
-![Diagrama de Clases](/ruta/a/la/DiagramaClases.jpg)
+![Diagrama de Clases](/images/DiagramaClases.jpg)
