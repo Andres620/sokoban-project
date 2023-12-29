@@ -115,3 +115,8 @@ cuidado con no interferir en la ruta de otro robot.
 
 Para tener una idea general del juego se puede ver el siguiente video:
 https://youtu.be/5fdVSfprZ54?si=Oam4X58fD7rx96Yr
+
+
+
+# ARQUITECTURA
+![Diagrama de Clases](/ruta/a/la/DiagramaClases.jpg)
